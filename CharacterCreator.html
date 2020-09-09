@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<!--
+ color is Bisque #FFE4C4
+-->
+<html>
+    <head>
+        <style>
+
+
+            body {
+                width: 800px;
+                right: 0px;
+                left: 0px;
+                margin-right: auto;
+                margin-left: auto;
+                margin-top: 40px;
+                font-family: "New Century Schoolbook, TeX Gyre Schola, serif";
+                background-color: #fedcba;
+            } form {
+                margin: 0 auto;
+                width: 200px;
+                padding: 5px;
+
+            } textarea {
+                font-size: 12px;
+                text-align: left;
+                width: calc(100% - 22px);
+                border-radius: 10px;
+                padding: 10px;
+                resize: none;
+                overflow: hidden;
+                height: 2em;
+                background-color: #fedcba;
+            }
+            
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            .attribute-table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            } .derived-attribute-table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                text-align: center;
+            } th {
+                background-color: #ba9876;
+            } 
+            
+            div.textblock {
+                display: flex;
+                flex-direction: column-reverse;
+                width: 100%;
+                align-items: center;
+
+                
+            }
+            /*Name, Genesis Points and Race should go here*/
+            header {
+                display: flex;
+                align-content: stretch;
+                align-items: stretch;
+
+                
+            } section.charname {
+                border: 2px solid black;
+                border-right: 0px;
+                border-radius: 10px 0 0 10px;
+                padding: 5px 0;
+                background-color: #ba9876;
+                width: 30%;
+                display: flex;
+                flex-direction: column-reverse;
+                bottom: 0px;
+                top: 0px;
+                margin: auto;
+            } input.charname-input {
+                padding: 0.5em;
+                margin: 5px;
+                border: 0;
+                background-color: #fedcba;
+            } label.charname-label {
+                padding-left: 1em;
+            } section.title-misc {
+                width: 70%;
+                border: 2px solid black;
+                border-radius: 10px;
+                padding-left: 1em;
+                padding-right: 1em;
+            } ul.title-misc {
+                padding: 10px 0px 5px 0px;
+                display: flex;
+                flex-wrap: wrap;
+            } li.title-misc-genesis {
+                width: 20%;
+                display: flex;
+                flex-direction: column-reverse;
+            } label.title-misc-genesis-label {
+                line-height: 0px;
+                text-align: center;
+            } p.title-misc-genesis-number {
+                line-height: 0px;
+                font-size: 40px;
+                text-align: center;
+            } li.title-misc-persona {
+                width: 16%;
+                display: flex;
+                flex-direction: column-reverse;
+            } li.title-misc-race {
+                width: 30%;
+                display: flex;
+                flex-direction: column-reverse;
+            } label.title-misc-label {
+                margin-bottom: 5px;
+                text-align: center;
+            } input.title-misc-input {
+                border: 0px;
+                text-align: center;
+                border-bottom: 2px solid #ba9876;
+                background-color: #fedcba;
+            } input.ideals-input {
+                border: 0px;
+                border-bottom: 2px solid #ba9876;
+                background-color: #fedcba;
+                padding: 5px;
+            }
+            /*Formatting for sheet*/
+            .row {
+                display: flex;
+            }
+            /*Big List of Attributes, ALL OF THEM, totally*/
+            .attribute-column {
+                flex: 40%;
+                padding: 20px;
+            }
+            .non-attribute-column {
+                flex: 60%;
+                flex-direction: column;
+                padding: 20px;
+            }
+            /*Makes two sepearte 50% columns*/
+            .split-column {
+                display: flex;
+                flex: 50%;
+                flex-direction: row;
+            }
+            .column2 {
+                display: flex;
+                flex-direction: column;
+            }
+            /*Derived Attributes list goes here*/
+            /*Features and wisdoms need to be able to wrap to account for large starts*/
+            .features-wisdoms {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+            }
+
+            /*Tooltip css code*/
+            .tooltip {
+                color: black;
+                font-weight: bold;
+                position: relative;
+            }
+            .tooltiptext {
+                display: none;
+                position: absolute;
+
+                width: 400px;
+                background-color: #dcba98;
+                text-align: center;
+                border-style: solid;
+                border-width: 1px;
+                border-radius: 6px;
+
+                padding: 3px;
+                top: 20px;
+                left: 20px;
+                
+                z-index: 100;
+            }
+            .tooltip:hover span.tooltiptext {
+                display:block;
+            }
+            .tooltip-p {
+                text-align: justify;
+                margin: 0%;
+            }
+            /**/
+            .odd-table-row {
+                background-color: #fedcba;
+            }
+            .even-table-row {
+                background-color: #dcba98;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <!--Header containing Name Box, Genesis Points, and race???-->
+        <header>
+            <section class="charname">
+                <label class="charname-label" for="charname-input">Character Name</label>
+                <input class="charname-input" id="charname-input" placeholder="This Is A Name" />
+            </section>
+            <section class="title-misc">
+                <ul class="title-misc">
+                    <!--Genesis Points, a counter that updates-->
+                    <li class="title-misc-genesis">
+                        <label class="title-misc-genesis-label" for="genesis">Genesis</label>
+                        <strong>
+                            <p id="genesis" class="title-misc-genesis-number" name="genesis"></p>
+                        </strong>
+                    </li>
+                    <li style="width: 17%; display: flex; flex-direction: column-reverse;">
+                    </li>
+                    <!--Total Persona Earned-->
+                    <li class="title-misc-persona">
+                        <label class="title-misc-label" for="persona">Persona</label>
+                        <input class="title-misc-input" name="persona" placeholder="" id="persona" onfocusout="updateCurrentGen()" type="number" maxlength="4" />
+                    </li>
+                    <!--Drop down Menu for Race-->
+                    <li style="width: 17%; display: flex; flex-direction: column-reverse;">
+                    </li>
+                    <li class="title-misc-race">
+                        <label class="title-misc-label" for="race">Race</label>
+                        <select style="background-color: #ba9876;" name="race" id="race">
+                            <option value="human">Human</option>
+                            <!--<option value="elf">Fae</option>
+                            <option value="mordor">Hob</option>
+                            <option value="secret-quinlish">Quinlish Man</option>-->
+                        </select>
+                    </li>
+                </ul>
+            </section>
+        </header>
+
+        <!--Attributes and Non attributes share this space-->
+        <div class="row">
+            <div class="attribute-column">
+                <table class="attribute-table" style="width: 100%" id="attributes">
+                    <!--Attributes with normal costs 1 3 6 10 15-->
+                    <tr><th colspan="2"><h2>Attributes</h2></th></tr>
+                    <tr>
+                        <td class="tooltip">Animal Mastery
+                            <span class="tooltiptext">
+                                <p class="tooltip-p">
+                                    Animal Mastery is used to train and handle all manner of beasts. 
+                                    It can also be used to mount larger creatures like horses and even bandersnatches. <br>
+                                    Animal Mastery does not carry with it any keen knowledge of animals but is the only way to properly tame them.
+                                </p>
+                            </span>
+                        </td>
+                        <td><form>
+                                <input type="radio" id="animal-mastery1" value="0" name="animal-mastery" onclick="updateCurrentGen()" checked />1
+                                <input type="radio" id="animal-mastery2" value="1" name="animal-mastery" onclick="updateCurrentGen()" />2
+                                <input type="radio" id="animal-mastery3" value="3" name="animal-mastery" onclick="updateCurrentGen()" />3
+                                <input type="radio" id="animal-mastery4" value="6" name="animal-mastery" onclick="updateCurrentGen()" />4
+                                <input type="radio" id="animal-mastery5" value="10" name="animal-mastery" onclick="updateCurrentGen()" />5
+                                <input type="radio" id="animal-mastery6" value="15" name="animal-mastery" onclick="updateCurrentGen()" />6
+                        </form></td>
+                    </tr>
+                    <tr><td>Art</td>
+                        <td><form>
+                                <input type="radio" id="art1" value="0" name="art" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="art2" value="1" name="art" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="art3" value="3" name="art" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="art4" value="6" name="art" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="art5" value="10" name="art" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="art6" value="15" name="art" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Athletics</td>
+                        <td><form>
+                                <input type="radio" id="athletics1" value="0" name="athletics" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="athletics2" value="1" name="athletics" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="athletics3" value="3" name="athletics" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="athletics4" value="6" name="athletics" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="athletics5" value="10" name="athletics" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="athletics6" value="15" name="athletics" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Crafting</td>
+                        <td><form>
+                                <input type="radio" id="crafting1" value="0" name="crafting" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="crafting2" value="1" name="crafting" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="crafting3" value="3" name="crafting" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="crafting4" value="6" name="crafting" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="crafting5" value="10" name="crafting" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="crafting6" value="15" name="crafting" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Cultural Lore</td>
+                        <td><form>
+                                <input type="radio" id="cultural-lore1" value="0" name="cultural-lore" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="cultural-lore2" value="1" name="cultural-lore" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="cultural-lore3" value="3" name="cultural-lore" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="cultural-lore4" value="6" name="cultural-lore" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="cultural-lore5" value="10" name="cultural-lore" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="cultural-lore6" value="15" name="cultural-lore" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Discipline</td>
+                        <td><form>
+                                <input type="radio" id="discipline1" value="0" name="discipline" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="discipline2" value="1" name="discipline" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="discipline3" value="3" name="discipline" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="discipline4" value="6" name="discipline" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="discipline5" value="10" name="discipline" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="discipline6" value="15" name="discipline" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Falsehood</td>
+                        <td><form>
+                                <input type="radio" id="falsehood1" value="0" name="falsehood" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="falsehood2" value="1" name="falsehood" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="falsehood3" value="3" name="falsehood" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="falsehood4" value="6" name="falsehood" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="falsehood5" value="10" name="falsehood" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="falsehood6" value="15" name="falsehood" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Inquiry</td>
+                        <td><form>
+                                <input type="radio" id="inquiry1" value="0" name="inquiry" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="inquiry2" value="1" name="inquiry" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="inquiry3" value="3" name="inquiry" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="inquiry4" value="6" name="inquiry" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="inquiry5" value="10" name="inquiry" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="inquiry6" value="15" name="inquiry" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Linguistics</td>
+                        <td><form>
+                                <input type="radio" id="linguistics1" value="0" name="linguistics" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="linguistics2" value="1" name="linguistics" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="linguistics3" value="3" name="linguistics" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="linguistics4" value="6" name="linguistics" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="linguistics5" value="10" name="linguistics" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="linguistics6" value="15" name="linguistics" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Medicine</td>
+                        <td><form>
+                                <input type="radio" id="medicine1" value="0" name="medicine" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="medicine2" value="1" name="medicine" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="medicine3" value="3" name="medicine" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="medicine4" value="6" name="medicine" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="medicine5" value="10" name="medicine" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="medicine6" value="15" name="medicine" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Melee Combat</td>
+                        <td><form>
+                                <input type="radio" id="melee-combat1" value="0" name="melee-combat" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="melee-combat2" value="1" name="melee-combat" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="melee-combat3" value="3" name="melee-combat" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="melee-combat4" value="6" name="melee-combat" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="melee-combat5" value="10" name="melee-combat" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="melee-combat6" value="15" name="melee-combat" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Natural Lore</td>
+                        <td><form>
+                                <input type="radio" id="natural-lore1" value="0" name="natural-lore" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="natural-lore2" value="1" name="natural-lore" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="natural-lore3" value="3" name="natural-lore" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="natural-lore4" value="6" name="natural-lore" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="natural-lore5" value="10" name="natural-lore" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="natural-lore6" value="15" name="natural-lore" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Presence</td>
+                        <td><form>
+                                <input type="radio" id="presence1" value="0" name="presence" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="presence2" value="1" name="presence" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="presence3" value="3" name="presence" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="presence4" value="6" name="presence" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="presence5" value="10" name="presence" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="presence6" value="15" name="presence" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Ranged Combat</td>
+                        <td><form>
+                                <input type="radio" id="ranged-combat1" value="0" name="ranged-combat" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="ranged-combat2" value="1" name="ranged-combat" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="ranged-combat3" value="3" name="ranged-combat" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="ranged-combat4" value="6" name="ranged-combat" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="ranged-combat5" value="10" name="ranged-combat" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="ranged-combat6" value="15" name="ranged-combat" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Reason</td>
+                        <td><form>
+                                <input type="radio" id="reason1" value="0" name="reason" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="reason2" value="1" name="reason" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="reason3" value="3" name="reason" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="reason4" value="6" name="reason" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="reason5" value="10" name="reason" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="reason6" value="15" name="reason" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Reflexes</td>
+                        <td><form>
+                                <input type="radio" id="reflexes1" value="0" name="reflexes" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="reflexes2" value="1" name="reflexes" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="reflexes3" value="3" name="reflexes" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="reflexes4" value="6" name="reflexes" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="reflexes5" value="10" name="reflexes" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="reflexes6" value="15" name="reflexes" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Roguery</td>
+                        <td><form>
+                                <input type="radio" id="roguery1" value="0" name="roguery" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="roguery2" value="1" name="roguery" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="roguery3" value="3" name="roguery" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="roguery4" value="6" name="roguery" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="roguery5" value="10" name="roguery" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="roguery6" value="15" name="roguery" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Stealth</td>
+                        <td><form>
+                                <input type="radio" id="stealth1" value="0" name="stealth" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="stealth2" value="1" name="stealth" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="stealth3" value="3" name="stealth" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="stealth4" value="6" name="stealth" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="stealth5" value="10" name="stealth" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="stealth6" value="15" name="stealth" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Stewardry</td>
+                        <td><form>
+                                <input type="radio" id="stewardry1" value="0" name="stewardry" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="stewardry2" value="1" name="stewardry" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="stewardry3" value="3" name="stewardry" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="stewardry4" value="6" name="stewardry" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="stewardry5" value="10" name="stewardry" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="stewardry6" value="15" name="stewardry" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Strength</td>
+                        <td><form>
+                                <input type="radio" id="strength1" value="0" name="strength" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="strength2" value="1" name="strength" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="strength3" value="3" name="strength" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="strength4" value="6" name="strength" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="strength5" value="10" name="strength" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="strength6" value="15" name="strength" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Tactics</td>
+                        <td><form>
+                                <input type="radio" id="tactics1" value="0" name="tactics" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="tactics2" value="1" name="tactics" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="tactics3" value="3" name="tactics" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="tactics4" value="6" name="tactics" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="tactics5" value="10" name="tactics" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="tactics6" value="15" name="tactics" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Technique</td>
+                        <td><form>
+                                <input type="radio" id="technique1" value="0" name="technique" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="technique2" value="1" name="technique" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="technique3" value="3" name="technique" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="technique4" value="6" name="technique" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="technique5" value="10" name="technique" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="technique6" value="15" name="technique" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Unarmed Combat</td>
+                        <td><form>
+                                <input type="radio" id="unarmed-combat1" value="0" name="unarmed-combat" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="unarmed-combat2" value="1" name="unarmed-combat" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="unarmed-combat3" value="3" name="unarmed-combat" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="unarmed-combat4" value="6" name="unarmed-combat" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="unarmed-combat5" value="10" name="unarmed-combat" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="unarmed-combat6" value="15" name="unarmed-combat" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Vigilance</td>
+                        <td><form>
+                                <input type="radio" id="vigilance1" value="0" name="vigilance" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="vigilance2" value="1" name="vigilance" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="vigilance3" value="3" name="vigilance" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="vigilance4" value="6" name="vigilance" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="vigilance5" value="10" name="vigilance" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="vigilance6" value="15" name="vigilance" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                    <tr><td>Vitality</td>
+                        <td><form>
+                                <input type="radio" id="vitality1" value="0" name="vitality" onclick="updateCurrentGen()" checked/>1
+                                <input type="radio" id="vitality2" value="1" name="vitality" onclick="updateCurrentGen()"/>2
+                                <input type="radio" id="vitality3" value="3" name="vitality" onclick="updateCurrentGen()"/>3
+                                <input type="radio" id="vitality4" value="6" name="vitality" onclick="updateCurrentGen()"/>4
+                                <input type="radio" id="vitality5" value="10" name="vitality" onclick="updateCurrentGen()"/>5
+                                <input type="radio" id="vitality6" value="15" name="vitality" onclick="updateCurrentGen()"/>6
+                        </form></td>
+                    </tr>
+                </table>
+                <div style="padding-top: 20px;"></div>
+                <table class="attribute-table" style="width: 100%;" id="magic-table">
+                    <!--Attributes with increased costs 2 5 9 14 20-->
+                    <th colspan="2"><h2>Magical Attributes</h2></th>
+                    <tr><td>Magic 1</td>
+                    <td><form>
+                            <input type="radio" id="alchemy1" value="0" name="alchemy" onclick="resetMagicComplexity('1', '0')" checked/>1
+                            <input type="radio" id="alchemy2" value="2" name="alchemy" onclick="resetMagicComplexity('1', '1')"/>2
+                            <input type="radio" id="alchemy3" value="5" name="alchemy" onclick="resetMagicComplexity('1', '1')"/>3
+                            <input type="radio" id="alchemy4" value="9" name="alchemy" onclick="resetMagicComplexity('1', '1')"/>4
+                            <input type="radio" id="alchemy5" value="14" name="alchemy" onclick="resetMagicComplexity('1', '1')"/>5
+                            <input type="radio" id="alchemy6" value="20" name="alchemy" onclick="resetMagicComplexity('1', '1')"/>6
+                            <!--Work in Progress for complexity
+                            <br> <span style="text-align: center;">Complexity ??/??</span>
+                            -->
+                    </form></td>
+                    </tr>
+                    <tr id="magic1-com" style="display: none;">
+                        <td colspan="2" style="width: 100%;">
+                            <div style="display: flex; flex-direction: row;">
+                                <select id="magic1-ech">
+                                    <option value="0" id="magic1-ech0">-</option>
+                                    <option value="1" id="magic1-ech1" style="display: none;"></option>
+                                    <option value="2" id="magic1-ech2" style="display: none;"></option>
+                                    <option value="3" id="magic1-ech3" style="display: none;"></option>
+                                </select>
+                                <p id="magic1-text" style="margin: 5px;">Text Here</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr><td>Magic 2</td>
+                    <td><form>
+                            <input type="radio" id="classical-arcana1" value="0" name="classical-arcana" onclick="updateCurrentGen()" checked/>1
+                            <input type="radio" id="classical-arcana2" value="2" name="classical-arcana" onclick="updateCurrentGen()"/>2
+                            <input type="radio" id="classical-arcana3" value="5" name="classical-arcana" onclick="updateCurrentGen()"/>3
+                            <input type="radio" id="classical-arcana4" value="9" name="classical-arcana" onclick="updateCurrentGen()"/>4
+                            <input type="radio" id="classical-arcana5" value="14" name="classical-arcana" onclick="updateCurrentGen()"/>5
+                            <input type="radio" id="classical-arcana6" value="20" name="classical-arcana" onclick="updateCurrentGen()"/>6
+                    </form></td>
+                    </tr>
+                    <tr><td>Magic 3</td>
+                    <td><form>
+                            <input type="radio" id="dharilism1" value="0" name="dharilism" onclick="updateCurrentGen()" checked/>1
+                            <input type="radio" id="dharilism2" value="2" name="dharilism" onclick="updateCurrentGen()"/>2
+                            <input type="radio" id="dharilism3" value="5" name="dharilism" onclick="updateCurrentGen()"/>3
+                            <input type="radio" id="dharilism4" value="9" name="dharilism" onclick="updateCurrentGen()"/>4
+                            <input type="radio" id="dharilism5" value="14" name="dharilism" onclick="updateCurrentGen()"/>5
+                            <input type="radio" id="dharilism6" value="20" name="dharilism" onclick="updateCurrentGen()"/>6
+                    </form></td>
+                    </tr>
+                    <tr><td>Magic 4</td>
+                    <td><form>
+                            <input type="radio" id="hopeful-prayer1" value="0" name="hopeful-prayer" onclick="updateCurrentGen()" checked/>1
+                            <input type="radio" id="hopeful-prayer2" value="2" name="hopeful-prayer" onclick="updateCurrentGen()"/>2
+                            <input type="radio" id="hopeful-prayer3" value="5" name="hopeful-prayer" onclick="updateCurrentGen()"/>3
+                            <input type="radio" id="hopeful-prayer4" value="9" name="hopeful-prayer" onclick="updateCurrentGen()"/>4
+                            <input type="radio" id="hopeful-prayer5" value="14" name="hopeful-prayer" onclick="updateCurrentGen()"/>5
+                            <input type="radio" id="hopeful-prayer6" value="20" name="hopeful-prayer" onclick="updateCurrentGen()"/>6
+                    </form></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="non-attribute-column">
+
+
+                <!--Derived Attributes-->
+                <div class="derived-attributes" id="d-attributes">
+                    <table class="derived-attribute-table" style="width: 100%">
+                        <tr>
+                            <th><h3>Derived Statistic</h3></th>
+                            <th><h3>Value</h3></th>
+                        </tr>
+                        <tr>
+                            <td>Endurance</td>
+                            <td><p id="end">1</p></td>
+                        </tr>
+                        <tr>
+                            <td>Etheral Defense</td>
+                            <td><p id="eth">0</p></td>
+                        </tr>
+                        <tr>
+                            <td>Guard and Reactions</td>
+                            <td><p id="gua">1</p></td>
+                        </tr>
+                        <tr>
+                            <td>Initiative</td>
+                            <td><p id="ini">1</p></td>
+                        </tr>
+                        <tr>
+                            <td>Maximum Mana Tokens</td>
+                            <td><p id="man">0</p></td>
+                        </tr>
+                        <tr>
+                            <td>Melee Bonus</td>
+                            <td><p id="mel">1</p></td>
+                        </tr>
+                        <tr>
+                            <td>Ranged Bonus</td>
+                            <td><p id="ran">1</p></td>
+                        </tr>
+                        <tr>
+                            <td>Toxic Defense</td>
+                            <td><p id="tox">0</p></td>
+                        </tr>
+                        <tr>
+                            <td>Wealth (Assets)</td>
+                            <td>
+                                <div style="text-align: center;">
+                                    <p id="wea">0 (6)</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="strange-attributes" style="padding-top: 20px;" id="s-attributes">
+                    <section class="strange-attributes">
+                        <table class="attribute-table" style="width: 100%;">
+                            <tr>
+                                <th colspan="2"><h3>Strange Attributes</h3></th>
+                            </tr>
+                            <tr>
+                                <td><p>Attunement</p></td>
+                                <td><p id="attunement">1</p></td>
+                            </tr>
+                            <tr>
+                                <td><p>Insight</p></td>
+                                <td><select id="insight" onchange="balanceInsightMadness('insight')">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select></td>
+                            </tr>
+                            <tr>
+                                <td><p>Hope</p></td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td><p>Madness</p></td>
+                                <td><select id="madness" onchange="balanceInsightMadness('madness')">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select></td>
+                            </tr>
+                        </table>
+                    </section>
+                </div>
+
+                <div class="traits" style="padding-top: 20px;" id="traits">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <th colspan="2"><p>Traits</p></th>
+                        </tr>
+                        <tr> <!--Affluent/Poor-->
+                            <td><p>Affluent/Poor</p></td>
+                            <td><select id="affluent-poor" onchange="updateCurrentGen()">
+                                <option value="-9">-3 (-9 Gp)</option>
+                                <option value="-5">-2 (-5 Gp)</option>
+                                <option value="-2">-1 (-2 Gp)</option>
+                                <option value="0" selected>0 (-)</option>
+                                <option value="2">+1 (2 Gp)</option>
+                                <option value="5">+2 (5 Gp)</option>
+                                <option value="9">+3 (9 Gp)</option>
+                                <option value="14">+4 (14 Gp)</option>
+                                <option value="20">+5 (20 Gp)</option>
+                            </select></td>
+                        </tr>
+                        <tr> <!--Ailed-->
+                            <td><p>Ailed</p></td>
+                            <td><select id="ailed" onchange="updateCurrentGen()">
+                                <option value="0" selected>None (-)</option>
+                                <option value="-3">One (-3 Gp)</option>
+                                <option value="-7">Two (-7 Gp)</option>
+                                <option value="-12">Three (-12 Gp)</option>
+                                <option value="-18">Four (-18 Gp)</option>
+                            </select></td>
+                        </tr>
+                        <tr> <!--Associated-->
+                            <td><p>Associated</p></td>
+                            <td>
+                                <form>
+                                    <input type="radio" id="echelon0" value="0" name="echelon" checked onclick="resetAssociated()" />0
+                                    <input type="radio" id="echelon1" value="1" name="echelon" onclick="resetAssociated()" />1
+                                    <input type="radio" id="echelon2" value="2" name="echelon" onclick="resetAssociated()" />2
+                                    <input type="radio" id="echelon3" value="3" name="echelon" onclick="resetAssociated()" />3
+                                </form>
+                                <div style="display: flex;">
+                                    <select id="echelon1-select" style="display: none;" onchange="updateCurrentGen()">
+                                        <option value="0" style="display: none;" selected>-</option>
+                                        <option value="1">Local</option>
+                                        <option value="6">Regional</option>
+                                        <option value="11">Worldly</option>
+                                    </select>
+                                    <input type="range" id="echelon1-range" style="display: none;" min="0" max="4" value="0" oninput="updateCurrentGen()"/>
+                                    <div id="echelon1-text"></div>
+                                </div><br>
+                                <div style="display: flex;">
+                                    <select id="echelon2-select" style="display: none;" onchange="updateCurrentGen()">
+                                        <option value="0" style="display: none;" selected>-</option>
+                                        <option value="1">Local</option>
+                                        <option value="6">Regional</option>
+                                        <option value="11">Worldly</option>
+                                    </select>
+                                    <input type="range" id="echelon2-range" style="display: none;" min="0" max="4" value="0" oninput="updateCurrentGen()"/>
+                                    <div id="echelon2-text"></div>
+                                </div><br>
+                                <div style="display: flex;">
+                                    <select id="echelon3-select" style="display: none;" onchange="updateCurrentGen()">
+                                        <option value="0" style="display: none;" selected>-</option>
+                                        <option value="1">Local</option>
+                                        <option value="6">Regional</option>
+                                        <option value="11">Worldly</option>
+                                    </select>
+                                    <input type="range" id="echelon3-range" style="display: none;" min="0" max="4" value="0" oninput="updateCurrentGen()"/>
+                                    <div id="echelon3-text"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr> <!--Attuned-->
+                            <td><p>Attuned</p></td>
+                            <td><select id="attuned" onchange="updateCurrentGen()">
+                                <option value="0" selected>Rank 1 (-)</option>
+                                <option value="3">Rank 2 (3 Gp)</option>
+                                <option value="7">Rank 3 (7 Gp)</option>
+                                <option value="12">Rank 4 (12 Gp)</option>
+                                <option value="18">Rank 5 (18 Gp)</option>
+                            </select></td>
+                        </tr>
+                        <tr> <!--Cursed-->
+                            <td><p>Cursed</p></td>
+                            <td>
+                                <select id="num-cursed" onchange="resetCursed()">
+                                    <option value="0" selected>No Curses</option>
+                                    <option value="1">1 Curse</option>
+                                    <option value="2">2 Curses</option>
+                                    <option value="3">3 Curses</option>
+                                </select>
+                                <div style="display: flex; flex-direction: column;">
+                                    <select id="cursed1" style="display: none;" onchange="updateCurrentGen()">
+                                        <option value="0" selected style="display: none;"></option>
+                                        <option value="-5">Bothersome (-5 Gp)</option>
+                                        <option value="-11">Crippling (-11 Gp)</option>
+                                        <option value="-18">Dreadful (-18 Gp)</option>
+                                    </select>
+                                    <select id="cursed2" style="display: none;" onchange="updateCurrentGen()">
+                                        <option value="0" selected style="display: none;"></option>
+                                        <option value="-5">Bothersome (-5 Gp)</option>
+                                        <option value="-11">Crippling (-11 Gp)</option>
+                                        <option value="-18">Dreadful (-18 Gp)</option>
+                                    </select>
+                                    <select id="cursed3" style="display: none;" onchange="updateCurrentGen()">
+                                        <option value="0" selected style="display: none;"></option>
+                                        <option value="-5">Bothersome (-5 Gp)</option>
+                                        <option value="-11">Crippling (-11 Gp)</option>
+                                        <option value="-18">Dreadful (-18 Gp)</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr> <!--Distinguished-->
+                            <td><p>Distinguished</p></td>
+                            <td><select id="distinguished" onchange="updateCurrentGen()">
+                                <option value="0" selected>None (-)</option>
+                                <option value="3">One (3 Gp)</option>
+                                <option value="7">Two (7 Gp)</option>
+                                <option value="12">Three (12 Gp)</option>
+                                <option value="18">Four (18 Gp)</option>
+                                <option value="25">Five (25 Gp)</option>
+                                <option value="33">Six (33 Gp)</option>
+                            </select></td>
+                        </tr>
+                        <tr> <!--Fearful-->
+                            <td><p>Fearful</p></td>
+                            <td><select id="fearful" onchange="updateCurrentGen()">
+                                <option value="0" selected>None (-)</option>
+                                <option value="-3">One (-3 Gp)</option>
+                                <option value="-7">Two (-7 Gp)</option>
+                                <option value="-12">Three (-12 Gp)</option>
+                            </select></td>
+                        </tr>
+                        <tr> <!--Illiterate-->
+                            <td><p>Illiterate</p></td>
+                            <td><select id="illiterate" onchange="updateCurrentGen()">
+                                <option value="0" selected>No Rank (-)</option>
+                                <option value="-2">Rank 1 (-2 Gp)</option>
+                                <option value="-5">Rank 2 (-5 Gp)</option>
+                                <option value="-9">Rank 3 (-9 Gp)</option>
+                            </select></td>
+                        </tr>
+                        <tr> <!--Magically Equipped-->
+                            <td><p>Magically Equipped</p></td>
+                            <td>
+                                <select id="num-magical" onchange="resetMagical()">
+                                    <option value="0" selected>No Magical Items</option>
+                                    <option value="1">1 Magical Item</option>
+                                    <option value="2">2 Magical Items</option>
+                                    <option value="3">3 Magical Items</option>
+                                </select>
+                                <div style="display: flex; flex-direction: column;">
+                                    <select id="magical1" style="display: none;" onchange="updateCurrentGen()">
+                                        <option value="0" selected style="display: none;"></option>
+                                        <option value="3" >Mundane (3 Gp)</option>
+                                        <option value="7">Significant (7 Gp)</option>
+                                        <option value="12">Astonishing (12 Gp)</option>
+                                        <option value="18">Legendary (18 Gp)</option>
+                                    </select>
+                                    <select id="magical2" style="display: none;" onchange="updateCurrentGen()">
+                                        <option value="0" selected style="display: none;"></option>
+                                        <option value="3" >Mundane (3 Gp)</option>
+                                        <option value="7">Significant (7 Gp)</option>
+                                        <option value="12">Astonishing (12 Gp)</option>
+                                        <option value="18">Legendary (18 Gp)</option>
+                                    </select>
+                                    <select id="magical3" style="display: none;" onchange="updateCurrentGen()">
+                                        <option value="0" selected style="display: none;"></option>
+                                        <option value="3" >Mundane (3 Gp)</option>
+                                        <option value="7">Significant (7 Gp)</option>
+                                        <option value="12">Astonishing (12 Gp)</option>
+                                        <option value="18">Legendary (18 Gp)</option>
+                                    </select>
+                            </div></td>
+                        </tr>
+                        <tr> <!--Sworn Against-->
+                            <td><p>Sworn Against</p></td>
+                            <td><select id="num-sworn" onchange="resetSworn()">
+                                <option value="0" selected>No Sworn Enemies</option>
+                                <option value="1">1 Sworn Enemy</option>
+                                <option value="2" style="display: none;">2 Sworn Enemies</option>
+                                <option value="3" style="display: none;">3 Sworn Enemies</option>
+                            </select>
+                            <div style="display: flex; flex-direction: column;">
+                                <select id="sworn1" style="display: none;" onchange="updateCurrentGen()">
+                                    <option value="0" selected style="display: none;"></option>
+                                    <option value="-1" >No Properties (-1 Gp)</option>
+                                    <option value="-3">One Property (-3 Gp)</option>
+                                    <option value="-6">Two Properties (-6 Gp)</option>
+                                    <option value="-10">Three Properties (-10 Gp)</option>
+                                    <option value="-15">Four Properties (-15 Gp)</option>
+                                    <option value="-21">Five Properties (-21 Gp)</option>
+                                    <option value="-28">All Properties (-28 Gp)</option>
+                                </select>
+                                <select id="sworn2" style="display: none;" onchange="updateCurrentGen()">
+                                    <option value="0" selected style="display: none;"></option>
+                                    <option value="-1" >No Properties (-1 Gp)</option>
+                                    <option value="-3">One Property (-3 Gp)</option>
+                                    <option value="-6">Two Properties (-6 Gp)</option>
+                                    <option value="-10">Three Properties (-10 Gp)</option>
+                                    <option value="-15">Four Properties (-15 Gp)</option>
+                                    <option value="-21">Five Properties (-21 Gp)</option>
+                                    <option value="-28">All Properties (-28 Gp)</option>
+                                </select>
+                                <select id="sworn3" style="display: none;" onchange="updateCurrentGen()">
+                                    <option value="-0" selected style="display: none;"></option>
+                                    <option value="-1" >No Properties (-1 Gp)</option>
+                                    <option value="-3">One Property (-3 Gp)</option>
+                                    <option value="-6">Two Properties (-6 Gp)</option>
+                                    <option value="-10">Three Properties (-10 Gp)</option>
+                                    <option value="-15">Four Properties (-15 Gp)</option>
+                                    <option value="-21">Five Properties (-21 Gp)</option>
+                                    <option value="-28">All Properties (-28 Gp)</option>
+                                </select>
+                            </div></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            var currentGen = 0, totalGen = 36, persona;
+            //variables for all the non-magic skills
+            var Anm, Art, Ath, Crf, CuL, Dis, Fls, Inq, Lin, Med, MlC, NaL, Pre, RaC, Rea, Ref, Rog, Stl, Stw, Str, Tac, Tec, UnC, Vig, Vit
+            //Magical Attributes options
+                /*  Aerlyn, Alchemy, Classical Arcana, Dharilism, Doomed Sorcery, High Heroism,
+                    Hopeful Prayer, Ichorous Sorcery, Lucollic Prayer, Mardava, Mengxi, Qi,
+                    Old Futhark, Path from Tenesyl, Reaper's Remnant, Rofonomy, Sunken Faith,
+                    Thogish Sorcery. */
+            var Alc, ClA, Dha, HoP;
+            //Variables for traits
+            var WeaTrait = document.getElementById("affluent-poor");
+            var AilTrait = document.getElementById("ailed");
+            var AttTrait = document.getElementById("attuned");
+            var DinTrait = document.getElementById("distinguished");
+            var FeaTrait = document.getElementById("fearful");
+            var IllTrait = document.getElementById("illiterate");
+            var Wea, Ail, Att, Ass, Cur, Din, Fea, Ill, Mag, Swn;
+
+            document.getElementById("genesis").innerHTML = currentGen + "/" + totalGen;
+            recolorTable("attributes");
+            recolorTable("s-attributes");
+            recolorTable("d-attributes");
+            recolorTable("traits");
+            recolorTable("magic-table");
+
+            //Point Conversions and Sums
+            function convertPointsToRank(points) {
+                var rank;
+                if (points == 0) {
+                    rank = 1;
+                } else if (points == 1 || points == 2) {
+                    rank = 2;
+                } else if (points == 3 || points == 5) {
+                    rank = 3;
+                } else if (points == 6 || points == 9) {
+                    rank = 4;
+                } else if (points == 10 || points == 14) {
+                    rank = 5;
+                } else if (points == 15 || points == 20) {
+                    rank = 6;
+                }
+                return rank;
+            }
+            function convertAttunmentRank(points) {
+                var rank;
+                if (points == 0) {rank = 1;}
+                else if (points == 3) {rank = 2;}
+                else if (points == 7) {rank = 3;}
+                else if (points == 12) {rank = 4;}
+                else if (points == 18) {rank = 5;}
+                return rank;
+            }
+            function convertWealthRank(points) {
+                var rank;
+                if (points == 0) {
+                    rank = 0;
+                } else if (points == 2) {
+                    rank = 1;
+                } else if (points == 5) {
+                    rank = 2;
+                } else if (points == 9) {
+                    rank = 3;
+                } else if (points == 14) {
+                    rank = 4;
+                } else if (points == 20) {
+                    rank = 5;
+                } else if (points == -2) {
+                    rank = -1;
+                } else if (points == -5) {
+                    rank = -2;
+                } else if (points == -9) {
+                    rank = -3;
+                }
+                return rank;
+            }
+            function convertWealthToAssets(rank) {
+                var assetPoints;
+                if (rank == 0) {
+                    assetPoints = 6;
+                } else if (rank == 1) {
+                    assetPoints = 11;
+                } else if (rank == 2) {
+                    assetPoints = 15;
+                } else if (rank == 3) {
+                    assetPoints = 18;
+                } else if (rank == 4) {
+                    assetPoints = 20;
+                } else if (rank >= 5) {
+                    assetPoints = 21;
+                } 
+                return assetPoints;
+            }
+            function convertAssociatedRank() {
+                var totalCost = "0", ech1Cost = "0", ech2Cost = "0", ech3Cost = "0";
+                var ech1Select = document.getElementById("echelon1-select");
+                var ech2Select = document.getElementById("echelon2-select");
+                var ech3Select = document.getElementById("echelon3-select");
+
+                var costArray = [0, 1, 3, 6, 10, 15, 2, 5, 9, 14, 20, 3, 7, 12, 18, 25];
+                var rankArray = [0, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+                var ech1S = ech1Select.options[ech1Select.selectedIndex].value;
+                var ech1R = document.getElementById("echelon1-range").value;
+                var ech2S = ech2Select.options[ech2Select.selectedIndex].value;
+                var ech2R = document.getElementById("echelon2-range").value;
+                var ech3S = ech3Select.options[ech3Select.selectedIndex].value;
+                var ech3R = document.getElementById("echelon3-range").value;
+                if (+ech1S != 0) {
+                    ech1Cost = costArray[+ech1S + +ech1R];
+                    var ech1Rank = rankArray[+ech1S + +ech1R];
+                    document.getElementById("echelon1-text").innerHTML = "Rank" + " " + ech1Rank + "<br>" + ech1Cost + " Gp";
+                } 
+                else {
+                    document.getElementById("echelon1-text").innerHTML = "";
+                }
+                if (+ech2S != 0) {
+                    ech2Cost = costArray[+ech2S + +ech2R];
+                    var ech2Rank = rankArray[+ech2S + +ech2R];
+                    document.getElementById("echelon2-text").innerHTML = "Rank" + " " + ech2Rank + "<br>" + ech2Cost + " Gp";
+                } 
+                else {
+                    document.getElementById("echelon2-text").innerHTML = "";
+                }
+                if (+ech3S != 0) {
+                    ech3Cost = costArray[+ech3S + +ech3R];
+                    var ech3Rank = rankArray[+ech3S + +ech3R];
+                    document.getElementById("echelon3-text").innerHTML = "Rank" + " " + ech3Rank + "<br>" + ech3Cost + " Gp";
+                } 
+                else {
+                    document.getElementById("echelon3-text").innerHTML = "";
+                }
+                totalCost = (+ech1Cost + +ech2Cost + +ech3Cost);
+                return totalCost;
+            }
+            function convertCursedRank() {
+                var totalCost = 0, curse1 = 0, curse2 = 0, curse3 = 0; 
+                var curse1Select = document.getElementById("cursed1");
+                var curse2Select = document.getElementById("cursed2");
+                var curse3Select = document.getElementById("cursed3");
+
+                curse1 = curse1Select.options[curse1Select.selectedIndex].value;
+                curse2 = curse2Select.options[curse2Select.selectedIndex].value;
+                curse3 = curse3Select.options[curse3Select.selectedIndex].value;
+
+                totalCost = +curse1 + +curse2 + + curse3;
+                return totalCost;
+            }
+            function convertMagicalRank() {
+                var totalCost = 0, magical1 = 0, magical2 = 0, magical3 = 0; 
+                var magical1Select = document.getElementById("magical1");
+                var magical2Select = document.getElementById("magical2");
+                var magical3Select = document.getElementById("magical3"); 
+
+                magical1 = magical1Select.options[magical1Select.selectedIndex].value;
+                magical2 = magical2Select.options[magical2Select.selectedIndex].value;
+                magical3 = magical3Select.options[magical3Select.selectedIndex].value;
+
+                totalCost = +magical1 + +magical2 + + magical3;
+                return totalCost;
+            }
+            function convertSwornRank() {
+                var totalCost = 0, sworn1 = 0, sworn2 = 0, sworn3 = 0; 
+                var sworn1Select = document.getElementById("sworn1");
+                var sworn2Select = document.getElementById("sworn2");
+                var sworn3Select = document.getElementById("sworn3"); 
+
+                sworn1 = sworn1Select.options[sworn1Select.selectedIndex].value;
+                sworn2 = sworn2Select.options[sworn2Select.selectedIndex].value;
+                sworn3 = sworn3Select.options[sworn3Select.selectedIndex].value;
+
+                totalCost = +sworn1 + +sworn2 + + sworn3;
+                return totalCost;
+            }
+            
+            //Traits values controls
+            function resetAssociated() {
+                document.getElementById("echelon1-select").selectedIndex = 0;
+                document.getElementById("echelon1-range").value = 0;
+                document.getElementById("echelon2-select").selectedIndex = 0;
+                document.getElementById("echelon2-range").value = 0;
+                document.getElementById("echelon3-select").selectedIndex = 0;
+                document.getElementById("echelon3-range").value = 0;
+                changeAssociated();
+                updateCurrentGen();
+            }
+            function resetCursed() {
+                document.getElementById("cursed1").selectedIndex = 0;
+                document.getElementById("cursed2").selectedIndex = 0;
+                document.getElementById("cursed3").selectedIndex = 0;
+                changeCursed();
+                updateCurrentGen();
+            }
+            function resetMagical() {
+                document.getElementById("magical1").selectedIndex = 0;
+                document.getElementById("magical2").selectedIndex = 0;
+                document.getElementById("magical3").selectedIndex = 0;
+                changeMagical();
+                updateCurrentGen();
+            }
+            function resetSworn() {
+                document.getElementById("sworn1").selectedIndex = 0;
+                document.getElementById("sworn2").selectedIndex = 0;
+                document.getElementById("sworn3").selectedIndex = 0;
+                changeSworn();
+                updateCurrentGen();
+            }
+            function resetMagicComplexity(num , option) {
+                //debugger;
+                var magic = "magic" + num;
+                var magicEch = magic + "-ech";
+
+                document.getElementById(magicEch).selectedIndex = 0;
+
+                changeMagicInfo(magic, option);
+                recolorTable("magic-table");
+                updateCurrentGen();
+            }
+
+            //Strange Attribute funtions
+            function balanceInsightMadness(stat) {
+                //debugger;
+                var insightSelect = document.getElementById("insight");
+                var madnessSelect = document.getElementById("madness");
+                var insightValue = insightSelect.options[insightSelect.selectedIndex].value;
+                var madnessValue = madnessSelect.options[madnessSelect.selectedIndex].value;
+
+                if ((+madnessValue + +insightValue) > 6) {
+                    if (stat == 'insight') {
+                        if (+insightValue == 5) {madnessSelect.selectedIndex = '0';}
+                        if (+insightValue == 4) {madnessSelect.selectedIndex = '1';}
+                        if (+insightValue == 3) {madnessSelect.selectedIndex = '2';}
+                        if (+insightValue == 2) {madnessSelect.selectedIndex = '3';}
+                    }
+                    else if (stat == 'madness') {
+                        if (+madnessValue == 5) {insightSelect.selectedIndex = '0';}
+                        if (+madnessValue == 4) {insightSelect.selectedIndex = '1';}
+                        if (+madnessValue == 3) {insightSelect.selectedIndex = '2';}
+                        if (+madnessValue == 2) {insightSelect.selectedIndex = '3';}
+                    }
+                }
+            }
+
+            //Traits visibility controls
+            function changeAssociated() {
+                var option = document.querySelector('input[name="echelon"]:checked').value;
+                var ech1S = document.getElementById("echelon1-select");
+                var ech1R = document.getElementById("echelon1-range");
+                var ech2S = document.getElementById("echelon2-select");
+                var ech2R = document.getElementById("echelon2-range");
+                var ech3S = document.getElementById("echelon3-select");
+                var ech3R = document.getElementById("echelon3-range");
+
+                if (option == '0') {
+                    ech1S.style.display = "none";
+                    ech1R.style.display = "none";
+                    ech2S.style.display = "none";
+                    ech2R.style.display = "none";
+                    ech3S.style.display = "none";
+                    ech3R.style.display = "none";
+                } 
+                else if (option == '1') {
+                    ech1S.style.display = "block";
+                    ech1R.style.display = "block";
+                    ech2S.style.display = "none";
+                    ech2R.style.display = "none";
+                    ech3S.style.display = "none";
+                    ech3R.style.display = "none";
+                } 
+                else if (option == '2') {
+                    ech1S.style.display = "block";
+                    ech1R.style.display = "block";
+                    ech2S.style.display = "block";
+                    ech2R.style.display = "block";
+                    ech3S.style.display = "none";
+                    ech3R.style.display = "none";
+                } 
+                else if (option == '3') {
+                    ech1S.style.display = "block";
+                    ech1R.style.display = "block";
+                    ech2S.style.display = "block";
+                    ech2R.style.display = "block";
+                    ech3S.style.display = "block";
+                    ech3R.style.display = "block";
+                }
+            }
+            function changeCursed() {
+                var curseSelect = document.getElementById("num-cursed");
+                var option = curseSelect.options[curseSelect.selectedIndex].value;
+                var curse1 = document.getElementById("cursed1");
+                var curse2 = document.getElementById("cursed2");
+                var curse3 = document.getElementById("cursed3");
+
+                if (option == '0') {
+                    curse1.style.display = "none";
+                    curse2.style.display = "none";
+                    curse3.style.display = "none";
+                } 
+                else if (option == '1') {
+                    curse1.style.display = "block";
+                    curse2.style.display = "none";
+                    curse3.style.display = "none";
+                }
+                else if (option == '2') {
+                    curse1.style.display = "block";
+                    curse2.style.display = "block";
+                    curse3.style.display = "none";
+                }
+                else if (option == '3') {
+                    curse1.style.display = "block";
+                    curse2.style.display = "block";
+                    curse3.style.display = "block";
+                }
+            }
+            function changeMagical() {
+                var magicalSelect = document.getElementById("num-magical");
+                var option = magicalSelect.options[magicalSelect.selectedIndex].value;
+                var magical1 = document.getElementById("magical1");
+                var magical2 = document.getElementById("magical2");
+                var magical3 = document.getElementById("magical3");
+
+                if (option == '0') {
+                    magical1.style.display = "none";
+                    magical2.style.display = "none";
+                    magical3.style.display = "none";
+                } 
+                else if (option == '1') {
+                    magical1.style.display = "block";
+                    magical2.style.display = "none";
+                    magical3.style.display = "none";
+                }
+                else if (option == '2') {
+                    magical1.style.display = "block";
+                    magical2.style.display = "block";
+                    magical3.style.display = "none";
+                }
+                else if (option == '3') {
+                    magical1.style.display = "block";
+                    magical2.style.display = "block";
+                    magical3.style.display = "block";
+                }
+            }
+            function changeSworn() {
+                var swornSelect = document.getElementById("num-sworn");
+                var option = swornSelect.options[swornSelect.selectedIndex].value;
+                var sworn1 = document.getElementById("sworn1");
+                var sworn2 = document.getElementById("sworn2");
+                var sworn3 = document.getElementById("sworn3");
+
+                if (option == '0') {
+                    sworn1.style.display = "none";
+                    sworn2.style.display = "none";
+                    sworn3.style.display = "none";
+                } 
+                else if (option == '1') {
+                    sworn1.style.display = "block";
+                    sworn2.style.display = "none";
+                    sworn3.style.display = "none";
+                }
+                else if (option == '2') {
+                    sworn1.style.display = "block";
+                    sworn2.style.display = "block";
+                    sworn3.style.display = "none";
+                }
+                else if (option == '3') {
+                    sworn1.style.display = "block";
+                    sworn2.style.display = "block";
+                    sworn3.style.display = "block";
+                }
+            }
+            function changeMagicInfo(magic, option) {
+                var magicCom = magic + "-com";
+                var magicEch1 = magic + "-ech1";
+                var magicEch2 = magic + "-ech2";
+                var magicEch3 = magic + "-ech3";
+
+                var numEchelons = document.querySelector('input[name="echelon"]:checked').value;
+                var magicCom = document.getElementById(magicCom);
+                var magicOptionEch1 = document.getElementById(magicEch1);
+                var magicOptionEch2 = document.getElementById(magicEch2);
+                var magicOptionEch3 = document.getElementById(magicEch3);
+                
+                
+                if (option == 0) {
+                    magicCom.style.display = "none";
+                    magicOptionEch1.style.display = "none";
+                    magicOptionEch2.style.display = "none";
+                    magicOptionEch3.style.display = "none";
+                }
+                else {
+                    magicCom.style.display = "table-row";
+                    if (numEchelons > 0 && numEchelons < 4) {
+                        magicOptionEch1.style.display = "block";
+                    }
+                    if (numEchelons > 1 && numEchelons < 4) {
+                        magicOptionEch2.style.display = "block";
+                    }
+                    if (numEchelons > 2 && numEchelons < 4) {
+                        magicOptionEch3.style.display = "block";
+                    }
+                }
+            }
+
+            function recolorTable(id) {
+                debugger;
+                var table = document.getElementById(id);
+                var rows = table.getElementsByTagName("tr");
+                var j = 0;
+
+                for (i = 1; i < rows.length; i++) {
+                    if (window.getComputedStyle(rows[i]).display === "table-row") {
+                        if (j % 2 == 0) {
+                            rows[i].className = "even-table-row";
+                            j++;
+                        }
+                        else {
+                            rows[i].className = "odd-table-row";
+                            j++;
+                        }
+                    }
+                }
+            }
+
+            function updateCurrentGen() {
+                //Attribute options
+                Anm = document.querySelector('input[name="animal-mastery"]:checked').value;
+                Art = document.querySelector('input[name="art"]:checked').value;
+                Ath = document.querySelector('input[name="athletics"]:checked').value;
+                Crf = document.querySelector('input[name="crafting"]:checked').value;
+                CuL = document.querySelector('input[name="cultural-lore"]:checked').value;
+                Dis = document.querySelector('input[name="discipline"]:checked').value;
+                Fls = document.querySelector('input[name="falsehood"]:checked').value;
+                Inq = document.querySelector('input[name="inquiry"]:checked').value;
+                Lin = document.querySelector('input[name="linguistics"]:checked').value;
+                Med = document.querySelector('input[name="medicine"]:checked').value;
+                MlC = document.querySelector('input[name="melee-combat"]:checked').value;
+                NaL = document.querySelector('input[name="natural-lore"]:checked').value;
+                Pre = document.querySelector('input[name="presence"]:checked').value;
+                RaC = document.querySelector('input[name="ranged-combat"]:checked').value;
+                Rea = document.querySelector('input[name="reason"]:checked').value;
+                Ref = document.querySelector('input[name="reflexes"]:checked').value;
+                Rog = document.querySelector('input[name="roguery"]:checked').value;
+                Stl = document.querySelector('input[name="stealth"]:checked').value;
+                Stw = document.querySelector('input[name="stewardry"]:checked').value;
+                Str = document.querySelector('input[name="strength"]:checked').value;
+                Tac = document.querySelector('input[name="tactics"]:checked').value;
+                Tec = document.querySelector('input[name="technique"]:checked').value;
+                UnC = document.querySelector('input[name="unarmed-combat"]:checked').value;
+                Vig = document.querySelector('input[name="vigilance"]:checked').value;
+                Vit = document.querySelector('input[name="vitality"]:checked').value;
+
+                //Magical Attributes options
+                Alc = document.querySelector('input[name="alchemy"]:checked').value;
+                ClA = document.querySelector('input[name="classical-arcana"]:checked').value;
+                Dha = document.querySelector('input[name="dharilism"]:checked').value;
+                HoP = document.querySelector('input[name="hopeful-prayer"]:checked').value;
+
+                //Traits options
+                Wea = WeaTrait.options[WeaTrait.selectedIndex].value;
+                Ail = AilTrait.options[AilTrait.selectedIndex].value;
+                Att = AttTrait.options[AttTrait.selectedIndex].value;
+                Ass = convertAssociatedRank();  
+                Cur = convertCursedRank();
+                Din = DinTrait.options[DinTrait.selectedIndex].value;
+                Fea = FeaTrait.options[FeaTrait.selectedIndex].value;
+                Ill = IllTrait.options[IllTrait.selectedIndex].value;
+                Mag = convertMagicalRank();
+                Swn = convertSwornRank();
+
+                //Calculate Gp totals from persona and options bought
+                currentGen = (+Anm + +Art + +Ath + +Crf + +CuL + +Dis + +Fls + +Inq + +Lin + +Med + +MlC + +NaL + +Pre + 
+                                 +RaC + +Rea + +Ref + +Rog + +Stl + +Stw + +Str + +Tac + +Tec + +UnC + +Vig + +Vit + 
+                                 +Alc + +ClA + +Dha + +HoP +
+                                 +Wea + +Ail + +Att + +Ass + +Cur + +Din + +Fea + +Ill + +Mag + +Swn);
+
+                var persona = document.getElementById("persona").value;
+                document.getElementById("genesis").innerHTML = currentGen + "/" + (+totalGen + Math.floor(+persona / 4));
+
+                //Calculate Derived Statistics
+                document.getElementById("end").innerHTML = convertPointsToRank(+Vit);
+                document.getElementById("eth").innerHTML = Math.floor(convertAttunmentRank(+Att) / 2);
+                document.getElementById("gua").innerHTML = Math.ceil((convertPointsToRank(+Ref) + convertPointsToRank(+Tac)) / 3);
+                document.getElementById("ini").innerHTML = convertPointsToRank(+Tec);
+                document.getElementById("man").innerHTML = convertAttunmentRank(+Att);
+                document.getElementById("mel").innerHTML = Math.ceil(convertPointsToRank(+Str) / 2);
+                document.getElementById("ran").innerHTML = Math.ceil(convertPointsToRank(+Vig) / 2);
+                document.getElementById("tox").innerHTML = Math.floor(convertPointsToRank(+Vit) / 2);
+
+                //Wealth
+                var wealthRank = +Math.floor((convertPointsToRank(+Art) + convertPointsToRank(+Crf) + convertPointsToRank(+Stw)) / 5) + +convertWealthRank(+Wea);
+                var assets = convertWealthToAssets(+wealthRank);
+                document.getElementById("wea").innerHTML = wealthRank + " (" + assets + ")";
+
+                //Calculate Strange Attributes
+                document.getElementById("attunement").innerHTML = convertAttunmentRank(Att);
+            }            
+        </script>
+    </body>
+</html>
